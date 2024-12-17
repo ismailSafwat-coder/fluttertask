@@ -184,38 +184,38 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       MaterialButton(
                         onPressed: () async {
-                          if (formState.currentState!.validate()) {
-                            String res = await Authservices().signup(
-                                emailController.text,
-                                passwordController.text,
-                                context);
-
-                            if (res == 'succeed') {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HomePage()));
-                            }
-                          } else if (conditions != true) {
+                          if (!conditions) {
                             showDialog(
                               context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Error'),
-                                  content:
-                                      const Text('plz agree the conditions'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
+                              builder: (context) => AlertDialog(
+                                title: const Text('Error'),
+                                content:
+                                    const Text('Please agree to the terms.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
                             );
+                            return;
+                          }
+
+                          if (formState.currentState!.validate()) {
+                            String res = await Authservices().signup(
+                              emailController.text,
+                              passwordController.text,
+                              context,
+                            );
+                            if (res == 'succeed') {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()),
+                              );
+                            }
                           }
                         },
                         color: Colors.blue,
